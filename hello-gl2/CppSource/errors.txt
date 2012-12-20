@@ -1,0 +1,8 @@
+In file included from D:/Study/gui-project/hello-gl2//jni/common.h:46:0,
+                 from D:/Study/gui-project/hello-gl2//jni/stdafx.h:10,
+                 from D:/Study/gui-project/hello-gl2//jni/shading.cpp:1:
+C:/Dumb/Android/android-ndk-r8b/platforms/android-14/arch-arm/usr/include/jni.h:592:13: note: the mangling of 'va_list' has changed in GCC 4.4
+In file included from D:/Study/gui-project/hello-gl2//jni/common.h:46:0,
+                 from D:/Study/gui-project/hello-gl2//jni/stdafx.h:10,
+                 from D:/Study/gui-project/hello-gl2//jni/rotator.cpp:1:
+C:/Dumb/Android/android-ndk-r8b/platforms/android-14/arch-arm/usr/include/jni.h:592:13: note: the mangling of 'va_list' has changed in GCC 4.4
