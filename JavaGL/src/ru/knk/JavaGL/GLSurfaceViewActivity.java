@@ -43,8 +43,9 @@ public class GLSurfaceViewActivity extends Activity {
         setTitle("Hello!");
 
         game = new FakeGame(render);
+        render.setGame(game);
 
-        final int FPS = 40;
+        final int FPS = 100;
         TimerTask updateGameTask = new UpdateGameTask();
         gameTimer.scheduleAtFixedRate(updateGameTask, 0, 1000 / FPS);
     }
