@@ -2,7 +2,7 @@ package argame;
 
 public class TennisTable extends GameObject {
     public TennisTable(VirtualRealityRenderer renderer) {
-        //To change body of created methods use File | Settings | File Templates.
+        super(new BoudingBox(new Vector(0, 0), new Vector(500, 300)));
     }
 
     public TableWall wallForPoint(Vector collisionPoint) {

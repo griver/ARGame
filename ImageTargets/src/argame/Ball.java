@@ -1,7 +1,15 @@
 package argame;
 
-public class Ball extends GameObject {
+public class Ball extends GameObject implements RenderableGameObject {
+    private VirtualRealityRenderer renderer;
+
     public Ball(VirtualRealityRenderer renderer) {
-        //To change body of created methods use File | Settings | File Templates.
+        super(new BoudingBox(new Vector(0,0), new Vector(10,10)));
+        this.renderer = renderer;
+    }
+
+    @Override
+    public void render() {
+        renderer.updateBallLocal(getPosition().getX(), getPosition().getY());
     }
 }

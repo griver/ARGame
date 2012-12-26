@@ -1,21 +1,20 @@
 package argame;
 
-public class Game {
-    private final RealityTracker realityTracker;
-    private final VirtualRealityRenderer realityRenderer;
-    private static final int firstPlayerPaddleId = 0;
-    private static final int secondPlayerPaddleId = 1;
+public class PongGame {
 
+    private TennisTable table;
     private Paddle firstPlayerPaddle;
     private Paddle secondPlayerPaddle;
     private Ball ball;
-    private TennisTable table;
 
-    private int firstPlayerScore;
-    private int secondPlayerScore;
+    private final RealityTracker realityTracker;
+    private final VirtualRealityRenderer realityRenderer;
 
-    Game(RealityTracker tracker, VirtualRealityRenderer renderer) {
-        this.realityTracker = tracker;
+    private static final int firstPlayerPaddleId = 0;
+    private static final int secondPlayerPaddleId = 1;
+
+    PongGame(VirtualRealityRenderer renderer) {
+        this.realityTracker = new DumbRealityTracker();
         this.realityRenderer = renderer;
 
         firstPlayerPaddle = new Paddle(this.realityRenderer, firstPlayerPaddleId);
@@ -27,7 +26,7 @@ public class Game {
         this.realityTracker.register(secondPlayerPaddleId, secondPlayerPaddle);
     }
 
-    void update() {
+    void tick() {
         //===================
         //|    1   :   0  []|
         //|        :        |
@@ -56,8 +55,29 @@ public class Game {
             // but change the velocity as usual
             ball.setVelocity(new Vector(-1, -1));
         }
-//        table.update();
-//        ball.update();
+//        table.render();
+        ball.render();
     }
 
+    // To be called by Recognition
+    void updateFirstPlayerPaddleLocal(float x, float y) {
+        realityTracker.updatePosition(firstPlayerPaddleId, new Vector(x, y));
+    }
+    void updateSecondPlayerPaddleLocal(float x, float y) {
+        realityTracker.updatePosition(secondPlayerPaddleId, new Vector(x, y));
+    }
+
+    // To be called by Graphics
+    float getXMins() {
+        return table.getBoudingBox().getLowerLeft().getX();
+    }
+    float getXMaxs() {
+        return table.getBoudingBox().getUpperRight().getX();
+    }
+    float getYMins() {
+        return table.getBoudingBox().getLowerLeft().getY();
+    }
+    float getYMaxs() {
+        return table.getBoudingBox().getUpperRight().getY();
+    }
 }
