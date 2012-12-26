@@ -1,6 +1,16 @@
-package argame;
+package arpong.logic.game;
 
-public class PongGame {
+import arpong.logic.ar.*;
+import arpong.logic.gameobjects.Ball;
+import arpong.logic.gameobjects.Paddle;
+import arpong.logic.gameobjects.TableWall;
+import arpong.logic.gameobjects.TennisTable;
+import arpong.logic.primitives.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class PongGame implements AgreedUponPongGameInterface {
 
     private TennisTable table;
     private Paddle firstPlayerPaddle;
@@ -13,7 +23,7 @@ public class PongGame {
     private static final int firstPlayerPaddleId = 0;
     private static final int secondPlayerPaddleId = 1;
 
-    PongGame(VirtualRealityRenderer renderer) {
+    public PongGame(VirtualRealityRenderer renderer) {
         this.realityTracker = new DumbRealityTracker();
         this.realityRenderer = renderer;
 
@@ -26,16 +36,17 @@ public class PongGame {
         this.realityTracker.register(secondPlayerPaddleId, secondPlayerPaddle);
     }
 
-    void tick() {
-        //===================
-        //|    1   :   0  []|
-        //|        :        |
-        //|[]      :        |
-        //|        :   *    |
-        //===================
+    public synchronized void tick() {
+        //    ===================
+        //(0) |    1   :   0  []| (2)
+        //    |        :        |
+        //    |[]      :        |
+        //(1) |        :   *    | (3)
+        //    ===================
         // [] --- paddle
         // * --- ball
         // 1, 0 --- score
+        // () --- paddle steering button
         Vector collisionPoint = new Vector(0, 0);
         if (ball.collidesWith(firstPlayerPaddle, collisionPoint)) {
             // 1st player hit the ball - send it back to the 2nd player
@@ -60,31 +71,61 @@ public class PongGame {
     }
 
     // To be called by Recognition
-    void updateFirstPlayerPaddleLocal(float x, float y) {
-        realityTracker.updatePosition(firstPlayerPaddleId, new Vector(x, y));
+    public synchronized void updatePlayerPaddleLocal(int paddleId, float x, float y) {
+        realityTracker.updatePosition(paddleId, new Vector(x, y));
     }
-    void updateSecondPlayerPaddleLocal(float x, float y) {
-        realityTracker.updatePosition(secondPlayerPaddleId, new Vector(x, y));
+    public synchronized void updateSteeringButton(int buttonId, boolean pressed) {
+        Map<Integer, Integer> steerableButton = new HashMap<Integer, Integer>();
+        steerableButton.put(0, firstPlayerPaddleId);
+        steerableButton.put(1, firstPlayerPaddleId);
+        steerableButton.put(2, secondPlayerPaddleId);
+        steerableButton.put(3, secondPlayerPaddleId);
+
+        SteeringDirection direction = SteeringDirection.NEUTRAL;
+        // top button's ids have even values
+        if (pressed && (buttonId % 2 == 0)) {
+            direction = SteeringDirection.TOP;
+        } else if (pressed) {
+            direction = SteeringDirection.BOTTOM;
+        }
+
+        steerObject(steerableButton.get(buttonId), direction);
     }
 
     // To be called by Graphics
-    float getXMins() {
+    public float getXMins() {
         return table.getBoudingBox().getLowerLeft().getX();
     }
-    float getXMaxs() {
+    public float getXMaxs() {
         return table.getBoudingBox().getUpperRight().getX();
     }
-    float getYMins() {
+    public float getYMins() {
         return table.getBoudingBox().getLowerLeft().getY();
     }
-    float getYMaxs() {
+    public float getYMaxs() {
         return table.getBoudingBox().getUpperRight().getY();
     }
-    float getBallRadius() {
+    public float getBallRadius() {
         Vector lowerLeft = ball.getBoudingBox().getLowerLeft();
         Vector upperRight = ball.getBoudingBox().getUpperRight();
         float width = Math.abs(upperRight.getX() - lowerLeft.getX());
         float height = Math.abs(upperRight.getY() - lowerLeft.getY());
         return Math.min(width, height) / 2;
+    }
+
+    private void steerObject(int objectId, SteeringDirection direction) {
+        TrackableObject steeredObject = realityTracker.getObjectById(objectId);
+        Vector position = steeredObject.getPosition();
+        float dy = 0; // direction == neutral
+        switch (direction) {
+            case TOP:
+                dy = 5;
+                break;
+            case BOTTOM:
+                dy = -5;
+                break;
+        }
+        realityTracker.updatePosition(steeredObject, new Vector(position.getX(),
+                position.getY() + dy));
     }
 }

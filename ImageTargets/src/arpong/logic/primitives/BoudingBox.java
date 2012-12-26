@@ -1,4 +1,4 @@
-package argame;
+package arpong.logic.primitives;
 
 public class BoudingBox {
     private Vector lowerLeft;

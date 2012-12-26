@@ -1,6 +1,15 @@
-package argame;
+package arpong.logic.game;
 
-public class Game {
+import arpong.logic.ar.RealityTracker;
+import arpong.logic.ar.VirtualRealityRenderer;
+import arpong.logic.gameobjects.Ball;
+import arpong.logic.gameobjects.Paddle;
+import arpong.logic.gameobjects.TableWall;
+import arpong.logic.gameobjects.TennisTable;
+import arpong.logic.primitives.Vector;
+
+public class Game implements PongGameInterface {
+
     private final RealityTracker realityTracker;
     private final VirtualRealityRenderer realityRenderer;
     private static final int firstPlayerPaddleId = 0;
@@ -27,7 +36,7 @@ public class Game {
         this.realityTracker.register(secondPlayerPaddleId, secondPlayerPaddle);
     }
 
-    void update() {
+    public void tick() {
         //===================
         //|    1   :   0  []|
         //|        :        |

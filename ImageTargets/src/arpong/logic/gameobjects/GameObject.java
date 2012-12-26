@@ -1,4 +1,7 @@
-package argame;
+package arpong.logic.gameobjects;
+
+import arpong.logic.primitives.BoudingBox;
+import arpong.logic.primitives.Vector;
 
 public class GameObject {
     private BoudingBox boudingBox;
@@ -13,7 +16,7 @@ public class GameObject {
         this.boudingBox = box;
     }
 
-    boolean collidesWith(GameObject gameObject, Vector collisionPoint) {
+    public boolean collidesWith(GameObject gameObject, Vector collisionPoint) {
         return false;
     }
 

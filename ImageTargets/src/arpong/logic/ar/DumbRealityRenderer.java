@@ -1,4 +1,4 @@
-package argame;
+package arpong.logic.ar;
 
 public class DumbRealityRenderer implements VirtualRealityRenderer {
 

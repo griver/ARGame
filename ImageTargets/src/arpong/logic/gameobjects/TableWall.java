@@ -1,4 +1,4 @@
-package argame;
+package arpong.logic.gameobjects;
 
 public enum TableWall {
     LEFT_WALL,

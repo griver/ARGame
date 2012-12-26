@@ -1,11 +1,16 @@
-package argame;
+package arpong.logic.ar;
+
+import arpong.logic.primitives.Vector;
 
 import java.util.Map;
 
 public class DumbRealityTracker implements RealityTracker {
 
     public void updatePosition(int realWorldObjectId, Vector position) {
-        TrackableObject object = getObjectById(realWorldObjectId);
+        updatePosition(getObjectById(realWorldObjectId), position);
+    }
+
+    public void updatePosition(TrackableObject object, Vector position) {
         if (object != null) {
             object.setPosition(position);
         }
@@ -16,7 +21,7 @@ public class DumbRealityTracker implements RealityTracker {
         trackableObjectById.put(realWorldObjectId, object);
     }
 
-    private TrackableObject getObjectById(int realWorldObjectId) {
+    public TrackableObject getObjectById(int realWorldObjectId) {
         return trackableObjectById.get(realWorldObjectId);
     }
 

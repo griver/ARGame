@@ -1,4 +1,9 @@
-package argame;
+package arpong.logic.gameobjects;
+
+import arpong.logic.ar.RenderableGameObject;
+import arpong.logic.ar.VirtualRealityRenderer;
+import arpong.logic.primitives.BoudingBox;
+import arpong.logic.primitives.Vector;
 
 public class Ball extends GameObject implements RenderableGameObject {
     private VirtualRealityRenderer renderer;

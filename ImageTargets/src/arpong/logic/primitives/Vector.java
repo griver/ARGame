@@ -1,4 +1,4 @@
-package argame;
+package arpong.logic.primitives;
 
 public class Vector {
     private float x;

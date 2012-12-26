@@ -1,4 +1,8 @@
-package argame;
+package arpong.logic.gameobjects;
+
+import arpong.logic.ar.VirtualRealityRenderer;
+import arpong.logic.primitives.BoudingBox;
+import arpong.logic.primitives.Vector;
 
 public class TennisTable extends GameObject {
     public TennisTable(VirtualRealityRenderer renderer) {

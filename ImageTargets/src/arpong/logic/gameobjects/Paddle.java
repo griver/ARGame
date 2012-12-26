@@ -1,4 +1,10 @@
-package argame;
+package arpong.logic.gameobjects;
+
+import arpong.logic.ar.RenderableGameObject;
+import arpong.logic.ar.TrackableObject;
+import arpong.logic.ar.VirtualRealityRenderer;
+import arpong.logic.primitives.BoudingBox;
+import arpong.logic.primitives.Vector;
 
 public class Paddle extends TrackableObject implements RenderableGameObject {
     private VirtualRealityRenderer renderer;
