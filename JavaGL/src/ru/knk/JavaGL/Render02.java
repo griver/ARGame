@@ -10,8 +10,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class Render02 extends RenderBase {
-    final private float[] projectionMatrix = new float[16];
-    final private float[] modelviewMatrix = new float[16];
+    private final float[] projectionMatrix = new float[16];
+    private final float[] modelviewMatrix = new float[16];
     private int projectionMatrixId, modelviewMatrixId;
     private int programId;
 
