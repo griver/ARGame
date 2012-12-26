@@ -3,3 +3,6 @@ obj/*
 libs/*
 gen/*
 .idea/*
+Android/*
+*.sdf
+*.user
