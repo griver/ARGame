@@ -3,6 +3,7 @@ package ru.knk.JavaGL;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 import ru.knk.JavaGL.Interfaces.GameInterface;
 import ru.knk.JavaGL.Interfaces.GraphicsInterface;
 import ru.knk.JavaGL.Models.Sphere;
@@ -25,6 +26,9 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
     // Field parameters
     private float fieldMinX = 0.0f, fieldMaxX = 1.0f, fieldMinY = 0.0f, fieldMaxY = 1.0f;
     private float ballRadius = 0.05f;
+
+    // FPS count
+    private FPSCounter fpsCounter = new FPSCounter(5000, "JavaGL", "Render fps: ");
 
     private static final String kVertexShader =
             "precision mediump float; \n" +
@@ -55,7 +59,6 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         GLES20.glDepthFunc(GLES20.GL_LEQUAL);
 
         programId = Programs.loadProgram(kVertexShader, kFragmentShader);
-        //GLES20.glBindAttribLocation(programId, StaticModel.BUFFER_VERTS, "position");
         bindings[StaticModel.BUFFER_VERTS] = GLES20.glGetAttribLocation(programId, "position");
         GLES20.glEnableVertexAttribArray(bindings[StaticModel.BUFFER_VERTS]);
 
@@ -79,6 +82,8 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         }
 
         model.draw(bindings);
+
+        fpsCounter.update();
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
@@ -91,7 +96,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         Matrix.translateM(modelviewMatrix, 0, 0.0f, 0.0f, -10.0f);
     }
     @Override
-    public void updateProjectionGlobal(float[] matrix) {
+    public void updateProjectionGlobal(float[] modelview, float[] projection) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
