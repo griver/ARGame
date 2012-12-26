@@ -80,4 +80,11 @@ public class PongGame {
     float getYMaxs() {
         return table.getBoudingBox().getUpperRight().getY();
     }
+    float getBallRadius() {
+        Vector lowerLeft = ball.getBoudingBox().getLowerLeft();
+        Vector upperRight = ball.getBoudingBox().getUpperRight();
+        float width = Math.abs(upperRight.getX() - lowerLeft.getX());
+        float height = Math.abs(upperRight.getY() - lowerLeft.getY());
+        return Math.min(width, height) / 2;
+    }
 }
