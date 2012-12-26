@@ -6,22 +6,34 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import ru.knk.JavaGL.Interfaces.GameInterface;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Wrapper activity demonstrating the use of {@link android.opengl.GLSurfaceView}, a view that
  * uses OpenGL drawing into a dedicated surface.
  */
 public class GLSurfaceViewActivity extends Activity {
-
     private RenderBase mCurrentRender = null;
     private GLSurfaceView mGLSurfaceView;
+    private Timer gameTimer = new Timer();
+
+    private GameInterface game;
+
+    private class UpdateGameTask extends TimerTask {
+        @Override
+        public void run() {
+            game.tick();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        Render02 render = new Render02(this);
+        PongGraphics render = new PongGraphics(this);
         mCurrentRender = render;
         mGLSurfaceView = new GLSurfaceView(this);
         mGLSurfaceView.setEGLContextClientVersion(2);
@@ -29,6 +41,12 @@ public class GLSurfaceViewActivity extends Activity {
         setContentView(mGLSurfaceView);
 
         setTitle("Hello!");
+
+        game = new FakeGame(render);
+
+        final int FPS = 40;
+        TimerTask updateGameTask = new UpdateGameTask();
+        gameTimer.scheduleAtFixedRate(updateGameTask, 0, 1000 / FPS);
     }
 
     @Override

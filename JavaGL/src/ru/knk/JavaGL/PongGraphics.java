@@ -3,6 +3,7 @@ package ru.knk.JavaGL;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import ru.knk.JavaGL.Interfaces.GameInterface;
 import ru.knk.JavaGL.Interfaces.GraphicsInterface;
 import ru.knk.JavaGL.Models.Sphere;
 import ru.knk.JavaGL.Utils.Programs;
@@ -11,7 +12,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class PongGraphics extends RenderBase implements GraphicsInterface {
-
     private final float[] projectionMatrix = new float[16];
     private final float[] modelviewMatrix = new float[16];
     private int projectionMatrixId, modelviewMatrixId;
@@ -20,7 +20,11 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
     final private int[] bindings = new int[StaticModel.NUM_BUFFERS];
     private StaticModel model;
 
+    private Coord2D ballCoord = new Coord2D(0.0f, 0.0f);
 
+    // Field parameters
+    private float fieldMinX = 0.0f, fieldMaxX = 1.0f, fieldMinY = 0.0f, fieldMaxY = 1.0f;
+    private float ballRadius = 0.05f;
 
     private static final String kVertexShader =
             "precision mediump float; \n" +
@@ -58,7 +62,6 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         projectionMatrixId = GLES20.glGetUniformLocation(programId, "projection");
         modelviewMatrixId  = GLES20.glGetUniformLocation(programId, "modelview" );
 
-
         model = new Sphere(8, 1.0f);
     }
 
@@ -69,17 +72,23 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         GLES20.glUniformMatrix4fv(projectionMatrixId, 1, false, projectionMatrix, 0);
         GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelviewMatrix, 0);
 
+        float ballX, ballY;
+        synchronized (ballCoord) {
+            ballX = ballCoord.x;
+            ballY = ballCoord.y;
+        }
+
         model.draw(bindings);
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        GLES20.glViewport(0, 0, width, height); // Reset The Current Viewport
+        GLES20.glViewport(0, 0, width, height);
+
         Matrix.setIdentityM(projectionMatrix, 0);
         Matrix.perspectiveM(projectionMatrix, 0, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
-        //Matrix.scaleM(projectionMatrix, 0, 1.0f, 1.0f, 1.0f);
+
         Matrix.setIdentityM(modelviewMatrix, 0);
         Matrix.translateM(modelviewMatrix, 0, 0.0f, 0.0f, -10.0f);
-        //Matrix.setIdentityM(projectionMatrix, 0);
     }
     @Override
     public void updateProjectionGlobal(float[] matrix) {
@@ -93,6 +102,18 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
 
     @Override
     public void updateBallLocal(float x, float y) {
-
+        synchronized (ballCoord) {
+            ballCoord.x = x;
+            ballCoord.y = y;
+        }
     }
+
+    public void setGame(GameInterface game) {
+        fieldMinX = game.getXMins();
+        fieldMinY = game.getYMins();
+        fieldMaxX = game.getXMaxs();
+        fieldMaxY = game.getYMaxs();
+        ballRadius = game.getBallRadius();
+    }
+
 }

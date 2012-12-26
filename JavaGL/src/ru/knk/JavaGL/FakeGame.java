@@ -20,7 +20,7 @@ public class FakeGame implements GameInterface {
         final float el_time = (now - lastTime) / 1000.0f;
 
         ballX += el_time * 0.3f;
-        ballX = ballX - (float)Math.ceil(ballX);
+        ballX = ballX - (float)Math.floor(ballX);
 
         ballY = 0.5f;
         lastTime = now;
