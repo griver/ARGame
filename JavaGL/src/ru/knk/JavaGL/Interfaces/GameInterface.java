@@ -8,5 +8,7 @@ public interface GameInterface {
     float getYMins();
     float getYMaxs();
     float getBallRadius();
+    public float getPaddleXSize(int paddleId);
+    public float getPaddleYSize(int paddleId);
 }
 

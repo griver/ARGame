@@ -13,4 +13,6 @@ public interface AgreedUponPongGameInterface {
     public float getYMins();
     public float getYMaxs();
     public float getBallRadius();
+    public float getPaddleXSize(int paddleId);
+    public float getPaddleYSize(int paddleId);
 }
