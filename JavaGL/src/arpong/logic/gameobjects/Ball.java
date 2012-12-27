@@ -9,7 +9,7 @@ public class Ball extends GameObject implements RenderableGameObject {
     private VirtualRealityRenderer renderer;
 
     public Ball(VirtualRealityRenderer renderer) {
-        super(new BoundingBox(new Vector(0,0), new Vector(10,10)));
+        super(new BoundingBox(new Vector(0, 0), new Vector(10, 10)));
         this.renderer = renderer;
     }
 

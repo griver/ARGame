@@ -61,6 +61,16 @@ public class FakeGame implements GameInterface {
 
     @Override
     public float getBallRadius() {
-        return 0.05f;
+        return 0.2f;
+    }
+
+    @Override
+    public float getPaddleXSize(int paddleId) {
+        return 0.2f;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public float getPaddleYSize(int paddleId) {
+        return 0.5f;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
