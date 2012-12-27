@@ -1,4 +1,4 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 import android.util.Log;
 

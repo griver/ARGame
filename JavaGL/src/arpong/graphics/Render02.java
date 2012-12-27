@@ -1,10 +1,10 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import ru.knk.JavaGL.Models.Sphere;
-import ru.knk.JavaGL.Utils.Programs;
+import arpong.graphics.Models.Sphere;
+import arpong.graphics.Utils.Programs;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

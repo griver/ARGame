@@ -1,8 +1,8 @@
-package ru.knk.JavaGL.Models;
+package arpong.graphics.Models;
 
 import android.opengl.GLES20;
-import ru.knk.JavaGL.Utils.Buffers;
-import ru.knk.JavaGL.StaticModel;
+import arpong.graphics.Utils.Buffers;
+import arpong.graphics.StaticModel;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;

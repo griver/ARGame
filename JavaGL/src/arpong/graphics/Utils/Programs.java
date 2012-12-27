@@ -1,4 +1,4 @@
-package ru.knk.JavaGL.Utils;
+package arpong.graphics.Utils;
 
 import android.opengl.GLES20;
 import android.util.Log;

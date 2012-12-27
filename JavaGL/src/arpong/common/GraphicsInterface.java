@@ -1,4 +1,4 @@
-package ru.knk.JavaGL.Interfaces;
+package arpong.common;
 
 public interface GraphicsInterface {
     void updateProjectionGlobal(float[] modelview, float[] projection);

@@ -1,9 +1,7 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
-import android.opengl.GLES20;
-import android.util.Log;
-import ru.knk.JavaGL.Interfaces.GameInterface;
-import ru.knk.JavaGL.Interfaces.GraphicsInterface;
+import arpong.common.GameInterface;
+import arpong.common.GraphicsInterface;
 
 public class FakeGame implements GameInterface {
     private GraphicsInterface g;
@@ -36,6 +34,11 @@ public class FakeGame implements GameInterface {
 
     @Override
     public void updatePlayerPaddleLocal(int paddleId, float x, float y) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void updateSteeringButton(int buttonId, boolean pressed) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
