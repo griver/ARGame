@@ -17,6 +17,10 @@ public class GameObject {
     }
 
     public Vector collidesWith(GameObject gameObject) {
+        return collidesWith(gameObject, true);
+    }
+
+    public Vector collidesWith(GameObject gameObject, boolean enclosureIsCollision) {
         // TODO: desperately need better collision point detection
         BoundingBox bb = getBoundingBox();
         Vector pos = getPosition();
@@ -27,7 +31,7 @@ public class GameObject {
         BoundingBox shiftedObjBB = new BoundingBox(objBB.getLowerLeft().plus(objPos),
                                                    objBB.getUpperRight().plus(objPos));
 
-        if (shiftedBB.collidesWith(shiftedObjBB)) {
+        if (shiftedBB.collidesWith(shiftedObjBB, enclosureIsCollision)) {
             return objPos;
         }
         return null;

@@ -39,6 +39,10 @@ public class BoundingBox {
     }
 
     public boolean collidesWith(BoundingBox box) {
+        return collidesWith(box, true);
+    }
+
+    public boolean collidesWith(BoundingBox box, boolean enclosureIsCollision) {
         Vector diag = denormilizedDiagonal();
         float x = getLowerLeft().getX();
         float y = getLowerLeft().getY();
@@ -50,6 +54,13 @@ public class BoundingBox {
         float yTwo = box.getLowerLeft().getY();
         float oTwoWidth = boxDiag.getX();
         float oTwoHeight = boxDiag.getY();
+
+        boolean thisIsEnclosedInBox = x >= xTwo && y >= yTwo && oWidth <= oTwoWidth && oHeight <= oTwoHeight;
+        boolean boxIsEnclosedInThis = xTwo >= x && yTwo >= y && oTwoWidth <= oWidth && oTwoHeight <= oHeight;
+
+        if (!enclosureIsCollision && (boxIsEnclosedInThis || thisIsEnclosedInBox)) {
+            return false;
+        }
 
         if (x + oWidth < xTwo || x > xTwo + oTwoWidth) {
             return false;

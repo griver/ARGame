@@ -49,7 +49,7 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
         table.setVelocity(new Vector(0, 0));
 
         ball.setPosition(table.getBoundingBox().center());
-        ball.setVelocity(new Vector(2.5f, 1.5f));
+        ball.setVelocity(new Vector(2.5f, 1.8f));
 
         float tableWidth = table.getBoundingBox().denormilizedDiagonal().getX();
         float tableHeight = table.getBoundingBox().denormilizedDiagonal().getY();
@@ -84,7 +84,7 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
                 // 2nd player hit the ball - send it back to the 1st player
                 ball.setVelocity(new Vector(-ballVelocity.getX(),
                                              ballVelocity.getY()));
-            } else if ((collisionPoint = ball.collidesWith(table)) != null) {
+            } else if ((collisionPoint = ball.collidesWith(table, false)) != null) {
                 wallCollision(table.wallForPoint(collisionPoint));
             }
         } else {    // ball is outside the box - return the ball to the position on the "surface" of the wall
@@ -135,13 +135,15 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
                 break;
             case UPPER_WALL:
                 ball.setVelocity(new Vector( ballVelocity.getX(),
-                                                /*-ballVelocity.getY()*/
-                                            -Math.abs(ballVelocity.getY())));
+//                                             -ballVelocity.getY()
+                                            -Math.abs(ballVelocity.getY())
+                ));
                 break;
             case LOWER_WALL:
                 ball.setVelocity(new Vector( ballVelocity.getX(),
-                                                /*-ballVelocity.getY()*/
-                                            Math.abs(ballVelocity.getY())));
+//                                             -ballVelocity.getY()
+                                            Math.abs(ballVelocity.getY())
+                ));
                 break;
         }
     }
