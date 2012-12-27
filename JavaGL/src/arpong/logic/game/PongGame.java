@@ -54,9 +54,11 @@ public class PongGame implements GameInterface {
         float tableWidth = table.getBoundingBox().denormilizedDiagonal().getX();
         float tableHeight = table.getBoundingBox().denormilizedDiagonal().getY();
 
-        firstPlayerPaddle.setPosition(new Vector(tableWidth * 0.0005f, tableHeight * 0.3f));
+        final float paddleWallDistance = tableWidth * 0.05f;
+        final float paddleHeight = tableHeight * 0.3f;
+        firstPlayerPaddle.setPosition(new Vector(paddleWallDistance, paddleHeight));
         firstPlayerPaddle.setVelocity(new Vector(0, 1));
-        secondPlayerPaddle.setPosition(new Vector(tableWidth - tableWidth * 0.0005f, tableHeight * 0.3f));
+        secondPlayerPaddle.setPosition(new Vector(tableWidth - paddleWallDistance, paddleHeight));
         secondPlayerPaddle.setVelocity(new Vector(0, 1));
     }
 
