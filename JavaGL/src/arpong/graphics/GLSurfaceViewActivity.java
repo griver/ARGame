@@ -7,6 +7,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import arpong.common.GameInterface;
 import arpong.logic.ar.DumbRealityTracker;
+import arpong.logic.ar.RandomRealityTracker;
+import arpong.logic.ar.RealityTracker;
 import arpong.logic.game.PongGame;
 
 import java.util.Timer;
@@ -44,7 +46,11 @@ public class GLSurfaceViewActivity extends Activity {
         setTitle("Hello!");
 
 //        game = new FakeGame(render);
-        game = new PongGame(render, new DumbRealityTracker());
+        // reality tracker for testing purposes
+        RealityTracker realityTracker = new RandomRealityTracker();
+        // reality tracker to be used with ar steering buttons
+//        RealityTracker realityTracker = new DumbRealityTracker();
+        game = new PongGame(render, realityTracker);
         render.setGame(game);
 
         final int FPS = 100;
