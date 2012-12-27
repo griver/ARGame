@@ -3,6 +3,7 @@ package arpong.graphics;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import arpong.common.GameInterface;
@@ -43,14 +44,18 @@ public class GLSurfaceViewActivity extends Activity {
         mGLSurfaceView.setRenderer(render);
         setContentView(mGLSurfaceView);
 
-        setTitle("Pong!");
+        setTitle("Random Pong!");
 
 //        game = new FakeGame(render);
         // reality tracker for testing purposes
         RealityTracker realityTracker = new RandomRealityTracker();
         // reality tracker to be used with ar steering buttons
 //        RealityTracker realityTracker = new DumbRealityTracker();
-        game = new PongGame(render, realityTracker);
+        final float tennisTableWidth = 500;
+//        final float tennisTableHeight = 300;
+        final float tennisTableHeight = tennisTableWidth / 1.667f;
+
+        game = new PongGame(tennisTableWidth, tennisTableHeight, render, realityTracker);
         render.setGame(game);
 
         final int FPS = 100;

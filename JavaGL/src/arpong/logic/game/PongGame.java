@@ -28,7 +28,8 @@ public class PongGame implements GameInterface {
 
     private FPSCounter fpsCounter = new FPSCounter(5000, "JavaGL", "Game fps: ");
 
-    public PongGame(VirtualRealityRenderer renderer, RealityTracker tracker) {
+    public PongGame(float tennisTableWidth, float tennisTableHeight,
+                    VirtualRealityRenderer renderer, RealityTracker tracker) {
 //        this.realityTracker = new DumbRealityTracker();
         this.realityTracker = tracker;
         this.realityRenderer = renderer;
@@ -36,7 +37,10 @@ public class PongGame implements GameInterface {
         firstPlayerPaddle = new Paddle(this.realityRenderer, firstPlayerPaddleId);
         secondPlayerPaddle = new Paddle(this.realityRenderer, secondPlayerPaddleId);
         ball = new Ball(this.realityRenderer);
+
         table = new TennisTable(this.realityRenderer);
+        table.setBoundingBox(new BoundingBox(new Vector(0, 0),
+                                             new Vector(tennisTableWidth, tennisTableHeight)));
 
         this.realityTracker.register(firstPlayerPaddleId, firstPlayerPaddle);
         this.realityTracker.register(secondPlayerPaddleId, secondPlayerPaddle);

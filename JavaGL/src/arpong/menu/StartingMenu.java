@@ -20,11 +20,13 @@ public class StartingMenu extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_layout);
+
+        setTitle("Pong!");
 		
         tf = Typeface.createFromAsset(getAssets(),"data/fonts/paeterb.ttf");
         
         TextView tv = (TextView) findViewById(R.id.start);
-        TextView tv1 = (TextView) findViewById(R.id.quick);
+        TextView tv1 = (TextView) findViewById(R.id.random);
         TextView tv3 = (TextView) findViewById(R.id.about);
         TextView tv4 = (TextView) findViewById(R.id.exit);
         
@@ -50,10 +52,11 @@ public class StartingMenu extends Activity implements OnClickListener {
 		
 		switch(v.getId()){
 			case R.id.start:
-				Intent i = new Intent(this, GLSurfaceViewActivity.class);
-				startActivity(i);
+                // TODO: start ARPong activity intent
 				break;
-			case R.id.quick:
+			case R.id.random:
+                Intent i = new Intent(this, GLSurfaceViewActivity.class);
+                startActivity(i);
 				break;
 			case R.id.about:
 				makeDialog();
@@ -83,5 +86,4 @@ public class StartingMenu extends Activity implements OnClickListener {
 	
 	    dialog.show();
 	}
-	
 }

@@ -21,19 +21,19 @@
 		style="@style/MenuFont" />
 
 	    <TextView
-	    	android:text="QUICK GAME"
-	    	android:id="@+id/quick"
+	    	android:text="RANDOM GAME"
+	    	android:id="@+id/random"
 		style="@style/MenuFont" />
 
 	    <TextView
 	        android:text="ABOUT"
 	        android:id="@+id/about"
-		style="@style/MenuFont" />  
+		style="@style/MenuFont" />
 
 		<TextView
 	        android:text="EXIT"
 	        android:id="@+id/exit"
-		style="@style/MenuFont" /> 
+		style="@style/MenuFont" />
 
   	</LinearLayout>
 </RelativeLayout>
