@@ -28,7 +28,7 @@ public class Vector {
     }
 
     public float dot(Vector v) {
-        return this.getX() * v.getX() + this.getY() + v.getY();
+        return this.getX() * v.getX() + this.getY() * v.getY();
     }
 
     public static float abs(Vector vector) {
