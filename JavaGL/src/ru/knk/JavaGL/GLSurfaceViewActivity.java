@@ -6,6 +6,8 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import arpong.logic.ar.DumbRealityTracker;
+import arpong.logic.game.PongGame;
 import ru.knk.JavaGL.Interfaces.GameInterface;
 
 import java.util.Timer;
@@ -42,7 +44,8 @@ public class GLSurfaceViewActivity extends Activity {
 
         setTitle("Hello!");
 
-        game = new FakeGame(render);
+//        game = new FakeGame(render);
+        game = new PongGame(render, new DumbRealityTracker());
         render.setGame(game);
 
         final int FPS = 100;

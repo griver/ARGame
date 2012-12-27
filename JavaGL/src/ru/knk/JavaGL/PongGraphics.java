@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import arpong.logic.ar.VirtualRealityRenderer;
 import ru.knk.JavaGL.Interfaces.GameInterface;
 import ru.knk.JavaGL.Interfaces.GraphicsInterface;
 import ru.knk.JavaGL.Models.FieldModel;
@@ -13,7 +14,7 @@ import ru.knk.JavaGL.Utils.Programs;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class PongGraphics extends RenderBase implements GraphicsInterface {
+public class PongGraphics extends RenderBase implements GraphicsInterface, VirtualRealityRenderer {
     private final float[] projectionMatrix = new float[16];
     private final float[] modelviewMatrix = new float[16];
     private int projectionMatrixId, modelviewMatrixId, colorId;
