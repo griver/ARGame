@@ -2,6 +2,7 @@ package arpong.graphics;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import arpong.common.GameInterface;
 import arpong.logic.ar.VirtualRealityRenderer;
@@ -14,7 +15,7 @@ import arpong.graphics.Utils.Programs;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class PongGraphics extends RenderBase implements GraphicsInterface, VirtualRealityRenderer {
+public class PongGraphics implements GraphicsInterface, VirtualRealityRenderer {
     private final float[] projectionMatrix = new float[16];
     private final float[] modelviewMatrix = new float[16];
     private int projectionMatrixId, modelviewMatrixId, colorId;
@@ -36,6 +37,8 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
     // FPS count
     private FPSCounter fpsCounter = new FPSCounter(5000, "JavaGL", "Render fps: ");
 
+    private float angle = 0;
+
     private static final String kVertexShader =
             "precision mediump float; \n" +
                     "uniform mat4 projection; \n" +
@@ -53,7 +56,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
                     "}";
 
     public PongGraphics(Context context) {
-        super(context);
+        //super(context);
         for (int i = 0; i < NUM_PADDLES; ++i) {
             paddleCoords[i] = new Coord2D(0.0f, 0.0f);
             paddleSizeX[i] = paddleSizeY[i] = 0.0f;
@@ -139,19 +142,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        final float[] modelview = new float[16], projection = new float[16];
 
-        GLES20.glViewport(0, 0, width, height);
-
-        Matrix.setIdentityM(projection, 0);
-        Matrix.perspectiveM(projection, 0, 45.0f, (float)width / (float)height, 0.1f, 1000.0f);
-
-        final float ofs = Math.max(fieldMaxX - fieldMinX, fieldMaxY - fieldMinY);
-        Matrix.setIdentityM(modelview, 0);
-        Matrix.translateM(modelview, 0, 0.0f, 0.0f, -2.0f * ofs);
-        //Matrix.rotateM(modelview, 0, -30.0f, 1.0f, 0.0f, 0.0f);
-
-        updateProjectionGlobal(modelview, projection);
     }
 
     @Override
