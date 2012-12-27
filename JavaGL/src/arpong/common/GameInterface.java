@@ -1,6 +1,6 @@
-package arpong.logic.game;
+package arpong.common;
 
-public interface AgreedUponPongGameInterface {
+public interface GameInterface {
     public void tick();
 
     // To be called by Recognition

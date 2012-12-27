@@ -1,15 +1,15 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import arpong.common.GameInterface;
 import arpong.logic.ar.VirtualRealityRenderer;
-import ru.knk.JavaGL.Interfaces.GameInterface;
-import ru.knk.JavaGL.Interfaces.GraphicsInterface;
-import ru.knk.JavaGL.Models.FieldModel;
-import ru.knk.JavaGL.Models.Sphere;
-import ru.knk.JavaGL.Utils.Programs;
+import arpong.common.GraphicsInterface;
+import arpong.graphics.Models.FieldModel;
+import arpong.graphics.Models.PaddleModel;
+import arpong.graphics.Models.Sphere;
+import arpong.graphics.Utils.Programs;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -21,9 +21,12 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
     private int programId;
 
     final private int[] bindings = new int[StaticModel.NUM_BUFFERS];
-    private StaticModel fieldModel, ballModel;
+    private StaticModel fieldModel, ballModel, paddleModel;
 
     private Coord2D ballCoord = new Coord2D(0.0f, 0.0f);
+
+    private static final int NUM_PADDLES = 2;
+    private Coord2D[] paddleCoords = new Coord2D[NUM_PADDLES];
 
     // Field parameters
     private float fieldMinX = 0.0f, fieldMaxX = 1.0f, fieldMinY = 0.0f, fieldMaxY = 1.0f;
@@ -50,6 +53,8 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
     public PongGraphics(Context context) {
         super(context);
+        for (int i = 0; i < NUM_PADDLES; ++i)
+            paddleCoords[i] = new Coord2D(0.0f, 0.0f);
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -68,6 +73,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
         fieldModel = new FieldModel();
         ballModel = new Sphere(8, 1.0f);
+        paddleModel = new PaddleModel();
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -76,34 +82,55 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
             ballX = ballCoord.x;
             ballY = ballCoord.y;
         }
+        float[] paddleX = new float[NUM_PADDLES];
+        float[] paddleY = new float[NUM_PADDLES];
+        synchronized (paddleCoords) {
+            for (int i = 0; i < NUM_PADDLES; ++i) {
+                paddleX[i] = paddleCoords[i].x;
+                paddleY[i] = paddleCoords[i].y;
+            }
+        }
+
+        final float spanX = fieldMaxX - fieldMinX, spanY = fieldMaxY - fieldMinY;
+        //final float spanZ = spanY * 0.1f;
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(programId);
 
         GLES20.glUniformMatrix4fv(projectionMatrixId, 1, false, projectionMatrix, 0);
 
+        final float[] fieldModelView = modelviewMatrix.clone();
+        Matrix.translateM(fieldModelView, 0, -spanX * 0.5f, -spanY * 0.5f, 0.0f);
+        Matrix.translateM(fieldModelView, 0, -fieldMinX, -fieldMinY, 0.0f);
+
         float[] modelview1;
-
-        final float spanX = fieldMaxX - fieldMinX, spanY = fieldMaxY - fieldMinY;
-
-        modelview1 = modelviewMatrix.clone();
-        Matrix.translateM(modelview1, 0, -spanX * 0.5f, -spanY * 0.5f, 0.0f);
+        modelview1 = fieldModelView.clone();
+        Matrix.translateM(modelview1, 0, fieldMinX, fieldMinY, 0.0f);
         Matrix.scaleM(modelview1, 0, spanX, spanY, 1.0f);
         GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
 
         GLES20.glUniform3f(colorId, 0.0f, 0.25f, 0.0f);
         fieldModel.draw(bindings);
 
-        ballX -= fieldMinX;
-        ballY -= fieldMinY;
-
-        modelview1 = modelviewMatrix.clone();
-        Matrix.translateM(modelview1, 0, -spanX * 0.5f + ballX, -spanY * 0.5f + ballY, 0.0f);
-        Matrix.scaleM(modelview1, 0, ballRadius, ballRadius, 1.0f);
+        modelview1 = fieldModelView.clone();
+        Matrix.translateM(modelview1, 0, ballX, ballY, ballRadius);
+        Matrix.scaleM(modelview1, 0, ballRadius, ballRadius, ballRadius);
         GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
 
         GLES20.glUniform3f(colorId, 1.0f, 0.5f, 0.0f);
         ballModel.draw(bindings);
+
+        for (int i = 0; i < NUM_PADDLES; ++i) {
+            modelview1 = fieldModelView.clone();
+            Matrix.translateM(modelview1, 0, paddleX[i], paddleY[i], ballRadius);
+            Matrix.scaleM(modelview1, 0, ballRadius, ballRadius * 5.0f, ballRadius * 2.0f);
+            GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
+
+            GLES20.glUniform3f(colorId, 1.0f, 1.0f, 1.0f);
+            paddleModel.draw(bindings);
+        }
+
+        //paddleModel.draw(bindings);
 
         fpsCounter.update();
     }
@@ -125,7 +152,10 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
     @Override
     public void updatePlayerPaddleLocal(int paddleId, float x, float y) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        synchronized (paddleCoords) {
+            paddleCoords[paddleId].x = x;
+            paddleCoords[paddleId].y = y;
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 public class Coord2D {
     Coord2D(float x, float y) {

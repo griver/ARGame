@@ -1,4 +1,4 @@
-package ru.knk.JavaGL.Utils;
+package arpong.graphics.Utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

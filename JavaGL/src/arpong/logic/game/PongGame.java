@@ -1,5 +1,6 @@
 package arpong.logic.game;
 
+import arpong.common.GameInterface;
 import arpong.logic.ar.*;
 import arpong.logic.gameobjects.Ball;
 import arpong.logic.gameobjects.Paddle;
@@ -7,13 +8,12 @@ import arpong.logic.gameobjects.TableWall;
 import arpong.logic.gameobjects.TennisTable;
 import arpong.logic.primitives.BoundingBox;
 import arpong.logic.primitives.Vector;
-import ru.knk.JavaGL.FPSCounter;
-import ru.knk.JavaGL.Interfaces.GameInterface;
+import arpong.graphics.FPSCounter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PongGame implements AgreedUponPongGameInterface, GameInterface {
+public class PongGame implements GameInterface {
 
     private TennisTable table;
     private Paddle firstPlayerPaddle;

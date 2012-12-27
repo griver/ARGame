@@ -1,4 +1,4 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 public class GameRun implements Runnable {
     @Override

@@ -1,14 +1,13 @@
-package ru.knk.JavaGL;
+package arpong.graphics;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
-import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import arpong.common.GameInterface;
 import arpong.logic.ar.DumbRealityTracker;
 import arpong.logic.game.PongGame;
-import ru.knk.JavaGL.Interfaces.GameInterface;
 
 import java.util.Timer;
 import java.util.TimerTask;
