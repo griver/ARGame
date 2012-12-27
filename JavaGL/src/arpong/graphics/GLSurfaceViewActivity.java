@@ -43,7 +43,7 @@ public class GLSurfaceViewActivity extends Activity {
         mGLSurfaceView.setRenderer(render);
         setContentView(mGLSurfaceView);
 
-        setTitle("Hello!");
+        setTitle("Pong!");
 
 //        game = new FakeGame(render);
         // reality tracker for testing purposes
