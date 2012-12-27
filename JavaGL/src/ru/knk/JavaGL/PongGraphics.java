@@ -84,8 +84,9 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
         float[] modelview1;
 
-        modelview1 = modelviewMatrix.clone();
         final float spanX = fieldMaxX - fieldMinX, spanY = fieldMaxY - fieldMinY;
+
+        modelview1 = modelviewMatrix.clone();
         Matrix.translateM(modelview1, 0, -spanX * 0.5f, -spanY * 0.5f, 0.0f);
         Matrix.scaleM(modelview1, 0, spanX, spanY, 1.0f);
         GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
@@ -96,6 +97,13 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
         ballX -= fieldMinX;
         ballY -= fieldMinY;
 
+        modelview1 = modelviewMatrix.clone();
+        Matrix.translateM(modelview1, 0, -spanX * 0.5f + ballX, -spanY * 0.5f + ballY, 0.0f);
+        Matrix.scaleM(modelview1, 0, ballRadius, ballRadius, 1.0f);
+        GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
+
+        GLES20.glUniform3f(colorId, 1.0f, 0.5f, 0.0f);
+        ballModel.draw(bindings);
 
         fpsCounter.update();
     }
@@ -104,7 +112,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
         GLES20.glViewport(0, 0, width, height);
 
         Matrix.setIdentityM(projectionMatrix, 0);
-        Matrix.perspectiveM(projectionMatrix, 0, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
+        Matrix.perspectiveM(projectionMatrix, 0, 45.0f, (float)width / (float)height, 0.1f, 1000.0f);
 
         final float ofs = Math.max(fieldMaxX - fieldMinX, fieldMaxY - fieldMinY);
         Matrix.setIdentityM(modelviewMatrix, 0);
