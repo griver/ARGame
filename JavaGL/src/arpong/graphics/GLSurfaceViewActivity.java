@@ -43,7 +43,7 @@ public class GLSurfaceViewActivity extends Activity {
         // reality tracker to be used with ar steering buttons
 //        RealityTracker realityTracker = new DumbRealityTracker();
         final float tennisTableWidth = 500;
-        final float tennisTableHeight = 300;
+        final float tennisTableHeight = 500;
         //final float tennisTableHeight = tennisTableWidth / 1.667f;
         //final float tennisTableHeight = 800;
 
