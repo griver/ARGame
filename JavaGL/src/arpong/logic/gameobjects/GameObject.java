@@ -12,6 +12,10 @@ public class GameObject {
         return boundingBox;
     }
 
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
     public GameObject(BoundingBox box) {
         this.boundingBox = box;
     }
@@ -56,4 +60,6 @@ public class GameObject {
     public void move() {
         setPosition(getPosition().plus(getVelocity()));
     }
+
+
 }
