@@ -2,10 +2,11 @@ package ru.knk.JavaGL;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 import ru.knk.JavaGL.Interfaces.GameInterface;
 import ru.knk.JavaGL.Interfaces.GraphicsInterface;
+import ru.knk.JavaGL.Models.FieldModel;
 import ru.knk.JavaGL.Models.Sphere;
 import ru.knk.JavaGL.Utils.Programs;
 
@@ -15,11 +16,11 @@ import javax.microedition.khronos.opengles.GL10;
 public class PongGraphics extends RenderBase implements GraphicsInterface {
     private final float[] projectionMatrix = new float[16];
     private final float[] modelviewMatrix = new float[16];
-    private int projectionMatrixId, modelviewMatrixId;
+    private int projectionMatrixId, modelviewMatrixId, colorId;
     private int programId;
 
     final private int[] bindings = new int[StaticModel.NUM_BUFFERS];
-    private StaticModel model;
+    private StaticModel fieldModel, ballModel;
 
     private Coord2D ballCoord = new Coord2D(0.0f, 0.0f);
 
@@ -35,15 +36,13 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
                     "uniform mat4 projection; \n" +
                     "uniform mat4 modelview; \n" +
                     "attribute vec3 position; \n" +
-                    "varying vec3 color; \n" +
                     "void main() { \n" +
                     "  gl_Position = projection * modelview * vec4(position, 1.0); \n" +
-                    "  color = vec3((position.x + 1.0) * 0.5, (position.y + 1.0) * 0.5, 0.0);\n" +
                     "}";
 
     private static final String kFragmentShader =
             "precision mediump float; \n" +
-                    "varying vec3 color; \n" +
+                    "uniform vec3 color; \n" +
                     "void main() { \n" +
                     "  gl_FragColor = vec4(color, 1.0); \n" +
                     "}";
@@ -64,24 +63,38 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
 
         projectionMatrixId = GLES20.glGetUniformLocation(programId, "projection");
         modelviewMatrixId  = GLES20.glGetUniformLocation(programId, "modelview" );
+        colorId = GLES20.glGetUniformLocation(programId, "color");
 
-        model = new Sphere(8, 1.0f);
+        fieldModel = new FieldModel();
+        ballModel = new Sphere(8, 1.0f);
     }
 
     public void onDrawFrame(GL10 unused) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-        GLES20.glUseProgram(programId);
-
-        GLES20.glUniformMatrix4fv(projectionMatrixId, 1, false, projectionMatrix, 0);
-        GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelviewMatrix, 0);
-
         float ballX, ballY;
         synchronized (ballCoord) {
             ballX = ballCoord.x;
             ballY = ballCoord.y;
         }
 
-        model.draw(bindings);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glUseProgram(programId);
+
+        GLES20.glUniformMatrix4fv(projectionMatrixId, 1, false, projectionMatrix, 0);
+
+        float[] modelview1;
+
+        modelview1 = modelviewMatrix.clone();
+        final float spanX = fieldMaxX - fieldMinX, spanY = fieldMaxY - fieldMinY;
+        Matrix.translateM(modelview1, 0, -spanX * 0.5f, -spanY * 0.5f, 0.0f);
+        Matrix.scaleM(modelview1, 0, spanX, spanY, 1.0f);
+        GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
+
+        GLES20.glUniform3f(colorId, 0.0f, 0.25f, 0.0f);
+        fieldModel.draw(bindings);
+
+        ballX -= fieldMinX;
+        ballY -= fieldMinY;
+
 
         fpsCounter.update();
     }
@@ -92,8 +105,9 @@ public class PongGraphics extends RenderBase implements GraphicsInterface {
         Matrix.setIdentityM(projectionMatrix, 0);
         Matrix.perspectiveM(projectionMatrix, 0, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
 
+        final float ofs = Math.max(fieldMaxX - fieldMinX, fieldMaxY - fieldMinY);
         Matrix.setIdentityM(modelviewMatrix, 0);
-        Matrix.translateM(modelviewMatrix, 0, 0.0f, 0.0f, -10.0f);
+        Matrix.translateM(modelviewMatrix, 0, 0.0f, 0.0f, -2.0f * ofs);
     }
     @Override
     public void updateProjectionGlobal(float[] modelview, float[] projection) {
