@@ -11,7 +11,7 @@ public class Paddle extends TrackableObject implements RenderableGameObject {
     int id;
 
     public Paddle(VirtualRealityRenderer renderer, int objectId) {
-        super(new BoundingBox(new Vector(0, 0), new Vector(30, -80)));
+        super(new BoundingBox(new Vector(0, 0), new Vector(30, 80)));
         this.renderer = renderer;
         this.id = objectId;
     }

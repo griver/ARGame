@@ -47,6 +47,14 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
     private void init() {
         ball.setPosition(table.getBoundingBox().center());
         ball.setVelocity(new Vector(0.5f, 0.5f));
+
+        float tableWidth = table.getBoundingBox().denormilizedDiagonal().getX();
+        float tableHeight = table.getBoundingBox().denormilizedDiagonal().getY();
+
+        firstPlayerPaddle.setPosition(new Vector(tableWidth * 0.0005f, tableHeight / 2.0f));
+        firstPlayerPaddle.setVelocity(new Vector(0, 1));
+        secondPlayerPaddle.setPosition(new Vector(tableWidth - tableWidth * 0.0005f, tableHeight / 2.0f));
+        secondPlayerPaddle.setVelocity(new Vector(0, 1));
     }
 
     public synchronized void tick() {
@@ -177,6 +185,12 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
         float height = Math.abs(upperRight.getY() - lowerLeft.getY());
         return Math.min(width, height) / 2;
     }
+    public float getPaddleXSize(int paddleId) {
+        return getPaddleById(paddleId).getBoundingBox().denormilizedDiagonal().getX();
+    }
+    public float getPaddleYSize(int paddleId) {
+        return getPaddleById(paddleId).getBoundingBox().denormilizedDiagonal().getY();
+    }
 
     private void steerObject(int objectId, SteeringDirection direction) {
         TrackableObject steeredObject = realityTracker.getObjectById(objectId);
@@ -192,5 +206,14 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
         }
         realityTracker.updatePosition(steeredObject, new Vector(position.getX(),
                 position.getY() + dy));
+    }
+    private Paddle getPaddleById(int paddleId) {
+        Paddle paddle = null;
+        if (paddleId == firstPlayerPaddleId) {
+            paddle = firstPlayerPaddle;
+        } else if (paddleId == secondPlayerPaddleId) {
+            paddle = secondPlayerPaddle;
+        }
+        return paddle;
     }
 }
