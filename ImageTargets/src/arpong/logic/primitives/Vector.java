@@ -5,7 +5,8 @@ public class Vector {
     private float y;
 
     public Vector(float x, float y) {
-        //To change body of created methods use File | Settings | File Templates.
+        this.x = x;
+        this.y = y;
     }
 
     public float getY() {
@@ -14,5 +15,23 @@ public class Vector {
 
     public float getX() {
         return x;
+    }
+
+    public Vector plus(Vector diff) {
+        return new Vector(getX() + diff.getX(),
+                          getY() + diff.getY());
+    }
+
+    public Vector minus(Vector diff) {
+        return new Vector(getX() - diff.getX(),
+                          getY() - diff.getY());
+    }
+
+    public float dot(Vector v) {
+        return this.getX() * v.getX() + this.getY() + v.getY();
+    }
+
+    public static float abs(Vector vector) {
+        return vector.dot(vector);
     }
 }

@@ -1,16 +1,31 @@
 package arpong.logic.gameobjects;
 
 import arpong.logic.ar.VirtualRealityRenderer;
-import arpong.logic.primitives.BoudingBox;
+import arpong.logic.primitives.BoundingBox;
 import arpong.logic.primitives.Vector;
 
 public class TennisTable extends GameObject {
     public TennisTable(VirtualRealityRenderer renderer) {
-        super(new BoudingBox(new Vector(0, 0), new Vector(500, 300)));
+        super(new BoundingBox(new Vector(0, 0), new Vector(500, 300)));
     }
 
     public TableWall wallForPoint(Vector collisionPoint) {
-        return TableWall.LEFT_WALL;
+        float x = collisionPoint.getX();
+        float y = collisionPoint.getY();
+        BoundingBox tableBox = getBoundingBox();
+
+        TableWall wall = TableWall.LEFT_WALL;
+        if (y >= tableBox.getUpperRight().getY()) {
+            wall = TableWall.UPPER_WALL;
+        } else if (x >= tableBox.getUpperRight().getX()) {
+            wall = TableWall.RIGHT_WALL;
+        } else if (y <= tableBox.getLowerLeft().getY()) {
+            wall = TableWall.LOWER_WALL;
+        } else if (x <= tableBox.getLowerLeft().getX()) {
+            wall = TableWall.LEFT_WALL;
+        }
+
+        return wall;
     }
 
     public void incrementSecondPlayerScore() {

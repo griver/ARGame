@@ -5,6 +5,7 @@ import arpong.logic.gameobjects.Ball;
 import arpong.logic.gameobjects.Paddle;
 import arpong.logic.gameobjects.TableWall;
 import arpong.logic.gameobjects.TennisTable;
+import arpong.logic.primitives.BoundingBox;
 import arpong.logic.primitives.Vector;
 
 import java.util.HashMap;
@@ -47,27 +48,77 @@ public class PongGame implements AgreedUponPongGameInterface {
         // * --- ball
         // 1, 0 --- score
         // () --- paddle steering button
-        Vector collisionPoint = new Vector(0, 0);
-        if (ball.collidesWith(firstPlayerPaddle, collisionPoint)) {
-            // 1st player hit the ball - send it back to the 2nd player
-            ball.setVelocity(new Vector(-128, 128));
-        } else if (ball.collidesWith(secondPlayerPaddle, collisionPoint)) {
-            // 2nd player hit the ball - send it back to the 1st player
-            ball.setVelocity(new Vector(0, 0));
-        } else if (ball.collidesWith(table, collisionPoint)) {
-            // check what wall did the ball hit
-            // probably, increment the score
-            TableWall wall = table.wallForPoint(collisionPoint);
-            if (wall == TableWall.LEFT_WALL) {
-                table.incrementSecondPlayerScore();
-            } else if (wall == TableWall.RIGHT_WALL) {
-                table.incrementFirstPlayerScore();
+        // First player's (#0) paddle is on the left
+        // Second player's (#1) paddle is on the right
+        Vector collisionPoint;
+        if (table.getBoundingBox().isPointInside(ball.getPosition())) {
+            Vector ballVelocity = ball.getVelocity();
+            if ((collisionPoint = ball.collidesWith(firstPlayerPaddle)) != null) {
+                // 1st player hit the ball - send it back to the 2nd player
+                ball.setVelocity(new Vector(-ballVelocity.getX(),
+                                             ballVelocity.getY()));
+            } else if ((collisionPoint = ball.collidesWith(secondPlayerPaddle)) != null) {
+                // 2nd player hit the ball - send it back to the 1st player
+                ball.setVelocity(new Vector(-ballVelocity.getX(),
+                                             ballVelocity.getY()));
+            } else if ((collisionPoint = ball.collidesWith(table)) != null) {
+                wallCollision(table.wallForPoint(collisionPoint));
             }
-            // but change the velocity as usual
-            ball.setVelocity(new Vector(-1, -1));
+        } else {    // ball is outside the box - return the ball to the position on the "surface" of the wall
+            Vector ballPosition = ball.getPosition();
+            BoundingBox tableBox = table.getBoundingBox();
+            TableWall boxExitWall = table.wallForPoint(ballPosition);
+            final float eps = 0.0001f;
+            float dx = 0;
+            float dy = 0;
+            switch (boxExitWall) {
+                case LEFT_WALL:
+                    dx += Math.abs(ballPosition.getX() - tableBox.getLowerLeft().getX()) + eps;
+                    break;
+                case RIGHT_WALL:
+                    dx -= Math.abs(ballPosition.getX() - tableBox.getUpperRight().getX()) + eps;
+                    break;
+                case UPPER_WALL:
+                    dy -= Math.abs(ballPosition.getY() - tableBox.getUpperRight().getY()) + eps;
+                    break;
+                case LOWER_WALL:
+                    dy += Math.abs(ballPosition.getY() - tableBox.getLowerLeft().getY()) + eps;
+                    break;
+            }
+            ball.setPosition(ballPosition.plus(new Vector(dx, dy)));
+            wallCollision(boxExitWall);
         }
 //        table.render();
+        ball.move();
         ball.render();
+//        see also: Paddle::setPosition
+//        firstPlayerPaddle.render();
+//        secondPlayerPaddle.render();
+    }
+    private void wallCollision(TableWall wall) {
+        Vector ballVelocity = ball.getVelocity();
+        switch (wall) {
+            case LEFT_WALL:
+                table.incrementSecondPlayerScore();
+                ball.setVelocity(new Vector(-ballVelocity.getX(),
+                                             ballVelocity.getY()));
+                break;
+            case RIGHT_WALL:
+                table.incrementFirstPlayerScore();
+                ball.setVelocity(new Vector(-ballVelocity.getX(),
+                                             ballVelocity.getY()));
+                break;
+            case UPPER_WALL:
+                ball.setVelocity(new Vector( ballVelocity.getX(),
+                                                /*-ballVelocity.getY()*/
+                                            -Math.abs(ballVelocity.getY())));
+                break;
+            case LOWER_WALL:
+                ball.setVelocity(new Vector( ballVelocity.getX(),
+                                                /*-ballVelocity.getY()*/
+                                            Math.abs(ballVelocity.getY())));
+                break;
+        }
     }
 
     // To be called by Recognition
@@ -94,20 +145,20 @@ public class PongGame implements AgreedUponPongGameInterface {
 
     // To be called by Graphics
     public float getXMins() {
-        return table.getBoudingBox().getLowerLeft().getX();
+        return table.getBoundingBox().getLowerLeft().getX();
     }
     public float getXMaxs() {
-        return table.getBoudingBox().getUpperRight().getX();
+        return table.getBoundingBox().getUpperRight().getX();
     }
     public float getYMins() {
-        return table.getBoudingBox().getLowerLeft().getY();
+        return table.getBoundingBox().getLowerLeft().getY();
     }
     public float getYMaxs() {
-        return table.getBoudingBox().getUpperRight().getY();
+        return table.getBoundingBox().getUpperRight().getY();
     }
     public float getBallRadius() {
-        Vector lowerLeft = ball.getBoudingBox().getLowerLeft();
-        Vector upperRight = ball.getBoudingBox().getUpperRight();
+        Vector lowerLeft = ball.getBoundingBox().getLowerLeft();
+        Vector upperRight = ball.getBoundingBox().getUpperRight();
         float width = Math.abs(upperRight.getX() - lowerLeft.getX());
         float height = Math.abs(upperRight.getY() - lowerLeft.getY());
         return Math.min(width, height) / 2;
