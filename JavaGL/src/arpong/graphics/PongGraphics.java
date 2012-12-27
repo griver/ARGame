@@ -31,6 +31,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
     // Field parameters
     private float fieldMinX = 0.0f, fieldMaxX = 1.0f, fieldMinY = 0.0f, fieldMaxY = 1.0f;
     private float ballRadius = 0.05f;
+    private float[] paddleSizeX = new float[NUM_PADDLES], paddleSizeY = new float[NUM_PADDLES];
 
     // FPS count
     private FPSCounter fpsCounter = new FPSCounter(5000, "JavaGL", "Render fps: ");
@@ -53,8 +54,10 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
     public PongGraphics(Context context) {
         super(context);
-        for (int i = 0; i < NUM_PADDLES; ++i)
+        for (int i = 0; i < NUM_PADDLES; ++i) {
             paddleCoords[i] = new Coord2D(0.0f, 0.0f);
+            paddleSizeX[i] = paddleSizeY[i] = 0.0f;
+        }
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -123,7 +126,7 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
         for (int i = 0; i < NUM_PADDLES; ++i) {
             modelview1 = fieldModelView.clone();
             Matrix.translateM(modelview1, 0, paddleX[i], paddleY[i], ballRadius);
-            Matrix.scaleM(modelview1, 0, ballRadius, ballRadius * 5.0f, ballRadius * 2.0f);
+            Matrix.scaleM(modelview1, 0, paddleSizeX[i] * 0.5f, paddleSizeY[i] * 0.5f, ballRadius);
             GLES20.glUniformMatrix4fv(modelviewMatrixId, 1, false, modelview1, 0);
 
             GLES20.glUniform3f(colorId, 1.0f, 1.0f, 1.0f);
@@ -136,18 +139,27 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
+        final float[] modelview = new float[16], projection = new float[16];
+
         GLES20.glViewport(0, 0, width, height);
 
-        Matrix.setIdentityM(projectionMatrix, 0);
-        Matrix.perspectiveM(projectionMatrix, 0, 45.0f, (float)width / (float)height, 0.1f, 1000.0f);
+        Matrix.setIdentityM(projection, 0);
+        Matrix.perspectiveM(projection, 0, 45.0f, (float)width / (float)height, 0.1f, 1000.0f);
 
         final float ofs = Math.max(fieldMaxX - fieldMinX, fieldMaxY - fieldMinY);
-        Matrix.setIdentityM(modelviewMatrix, 0);
-        Matrix.translateM(modelviewMatrix, 0, 0.0f, 0.0f, -2.0f * ofs);
+        Matrix.setIdentityM(modelview, 0);
+        Matrix.translateM(modelview, 0, 0.0f, 0.0f, -1.0f * ofs);
+        Matrix.rotateM(modelview, 0, -30.0f, 1.0f, 0.0f, 0.0f);
+
+        updateProjectionGlobal(modelview, projection);
     }
+
     @Override
     public void updateProjectionGlobal(float[] modelview, float[] projection) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        for (int i = 0; i < 16; ++i) {
+            modelviewMatrix[i] = modelview[i];
+            projectionMatrix[i] = projection[i];
+        }
     }
 
     @Override
@@ -172,6 +184,11 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
         fieldMaxX = game.getXMaxs();
         fieldMaxY = game.getYMaxs();
         ballRadius = game.getBallRadius();
+
+        for (int i = 0; i < NUM_PADDLES; ++i) {
+            paddleSizeX[i] = game.getPaddleXSize(i);
+            paddleSizeY[i] = game.getPaddleYSize(i);
+        }
     }
 
 }
