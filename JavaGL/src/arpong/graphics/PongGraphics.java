@@ -148,8 +148,8 @@ public class PongGraphics extends RenderBase implements GraphicsInterface, Virtu
 
         final float ofs = Math.max(fieldMaxX - fieldMinX, fieldMaxY - fieldMinY);
         Matrix.setIdentityM(modelview, 0);
-        Matrix.translateM(modelview, 0, 0.0f, 0.0f, -1.0f * ofs);
-        Matrix.rotateM(modelview, 0, -30.0f, 1.0f, 0.0f, 0.0f);
+        Matrix.translateM(modelview, 0, 0.0f, 0.0f, -2.0f * ofs);
+        //Matrix.rotateM(modelview, 0, -30.0f, 1.0f, 0.0f, 0.0f);
 
         updateProjectionGlobal(modelview, projection);
     }
