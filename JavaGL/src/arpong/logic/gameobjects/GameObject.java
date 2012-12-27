@@ -23,12 +23,12 @@ public class GameObject {
         BoundingBox shiftedBB = new BoundingBox(bb.getLowerLeft().plus(pos),
                                                 bb.getUpperRight().plus(pos));
         BoundingBox objBB = gameObject.getBoundingBox();
-        Vector objPos = getPosition();
+        Vector objPos = gameObject.getPosition();
         BoundingBox shiftedObjBB = new BoundingBox(objBB.getLowerLeft().plus(objPos),
                                                    objBB.getUpperRight().plus(objPos));
 
         if (shiftedBB.collidesWith(shiftedObjBB)) {
-            return gameObject.getPosition();
+            return objPos;
         }
         return null;
     }
