@@ -45,6 +45,9 @@ public class PongGame implements AgreedUponPongGameInterface, GameInterface {
     }
 
     private void init() {
+        table.setPosition(new Vector(0, 0));
+        table.setVelocity(new Vector(0, 0));
+
         ball.setPosition(table.getBoundingBox().center());
         ball.setVelocity(new Vector(2.5f, 1.5f));
 
